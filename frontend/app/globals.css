@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design tokens mirrored as CSS variables for easy re-skinning from a Figma spec. */
+:root {
+  --color-primary: #13315c;
+  --color-accent: #1f9d6b;
+  --max-page: 1200px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-ink antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+  h1, h2, h3, h4 {
+    @apply text-primary tracking-tight;
+  }
+  a {
+    @apply transition-colors;
+  }
+}
+
+@layer components {
+  /* Shared content rhythm helpers (kept minimal — no heavy animation). */
+  .link-quiet {
+    @apply text-secondary hover:text-primary underline-offset-4 hover:underline;
+  }
+}

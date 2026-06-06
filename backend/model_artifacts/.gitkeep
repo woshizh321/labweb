@@ -1,0 +1,3 @@
+# Reserved for trained model artifacts (e.g. .pkl/.onnx/.json weights).
+# Do NOT delete this directory. Real artifacts are added per model and loaded by
+# backend/app/services/*. Keep large binaries out of git or use Git LFS.

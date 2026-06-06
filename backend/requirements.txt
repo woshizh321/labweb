@@ -1,0 +1,4 @@
+# Phase-1 backend skeleton. Pinned, minimal — no DB, no auth.
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+pydantic==2.7.4

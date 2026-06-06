@@ -1,0 +1,72 @@
+[
+  {
+    "name": "[PI Name placeholder]",
+    "role": "Principal Investigator",
+    "degree": "MD, PhD",
+    "group": "PI",
+    "researchFocus": "Pharmacovigilance, real-world evidence, interpretable clinical prediction",
+    "email": "pi@example.edu",
+    "avatar": "",
+    "bio": "Principal investigator focused on bridging real-world clinical data with interpretable machine-learning models for drug safety and risk stratification."
+  },
+  {
+    "name": "[Co-Investigator placeholder]",
+    "role": "Associate Researcher",
+    "degree": "PhD",
+    "group": "Faculty / Staff",
+    "researchFocus": "Multi-omics integration, immune-inflammatory mechanisms",
+    "email": "staff1@example.edu",
+    "avatar": "",
+    "bio": "Leads multi-omics mechanistic studies linking chronic inflammation to age-related disease."
+  },
+  {
+    "name": "[Data Scientist placeholder]",
+    "role": "Research Data Scientist",
+    "degree": "MSc",
+    "group": "Faculty / Staff",
+    "researchFocus": "FAERS/JADER pipelines, disproportionality analysis, model engineering",
+    "email": "staff2@example.edu",
+    "avatar": "",
+    "bio": "Builds and maintains the lab's pharmacovigilance data pipelines and model artifacts."
+  },
+  {
+    "name": "[PhD Student A placeholder]",
+    "role": "PhD Candidate",
+    "degree": "PhD (in progress)",
+    "group": "PhD Students",
+    "researchFocus": "ICI hepatobiliary toxicity, immune-related adverse events",
+    "email": "phd1@example.edu",
+    "avatar": "",
+    "bio": "Studies immune checkpoint inhibitor-related hepatobiliary injury using real-world reporting data."
+  },
+  {
+    "name": "[PhD Student B placeholder]",
+    "role": "PhD Candidate",
+    "degree": "PhD (in progress)",
+    "group": "PhD Students",
+    "researchFocus": "Drug-induced kidney injury risk modeling",
+    "email": "phd2@example.edu",
+    "avatar": "",
+    "bio": "Develops interpretable risk-prediction models for drug-induced kidney injury."
+  },
+  {
+    "name": "[Master Student A placeholder]",
+    "role": "Master Student",
+    "degree": "MSc (in progress)",
+    "group": "Master Students",
+    "researchFocus": "Time-to-onset kinetics, Weibull modeling",
+    "email": "ms1@example.edu",
+    "avatar": "",
+    "bio": "Investigates adverse-event onset timing using time-to-onset kinetic models."
+  },
+  {
+    "name": "[Visiting Student placeholder]",
+    "role": "Visiting Research Student",
+    "degree": "Undergraduate",
+    "group": "Visiting Students",
+    "researchFocus": "Literature curation, data annotation",
+    "email": "visit1@example.edu",
+    "avatar": "",
+    "bio": "Supports systematic literature curation and structured data annotation."
+  }
+]

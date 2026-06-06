@@ -1,0 +1,22 @@
+# Secrets / local env
+.env
+.env.local
+*.env.local
+
+# Node
+node_modules/
+frontend/.next/
+frontend/out/
+
+# Python
+__pycache__/
+*.pyc
+backend/.venv/
+
+# Model binaries (keep the directory via .gitkeep, ignore large weights)
+backend/model_artifacts/*
+!backend/model_artifacts/.gitkeep
+
+# OS / editor
+.DS_Store
+*.log

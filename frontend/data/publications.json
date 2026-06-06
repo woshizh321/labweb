@@ -1,0 +1,42 @@
+[
+  {
+    "title": "[Representative publication placeholder] Disproportionality analysis of immune checkpoint inhibitor-associated hepatobiliary adverse events in a global spontaneous reporting system",
+    "authors": "[Author A], [Author B], [PI Name]",
+    "journal": "[Journal placeholder]",
+    "year": 2025,
+    "doi": "10.0000/placeholder.2025.001",
+    "pubmed": "00000001",
+    "tags": ["Pharmacovigilance", "ICI toxicity", "Hepatobiliary"],
+    "featured": true
+  },
+  {
+    "title": "[Representative publication placeholder] An interpretable machine-learning model for drug-induced kidney injury risk stratification",
+    "authors": "[Author C], [PI Name]",
+    "journal": "[Journal placeholder]",
+    "year": 2024,
+    "doi": "10.0000/placeholder.2024.002",
+    "pubmed": "00000002",
+    "tags": ["AI prediction", "DIKI", "Interpretability"],
+    "featured": true
+  },
+  {
+    "title": "[Representative publication placeholder] Time-to-onset kinetics of adverse drug reactions using Weibull modeling",
+    "authors": "[Author D], [Author E], [PI Name]",
+    "journal": "[Journal placeholder]",
+    "year": 2024,
+    "doi": "10.0000/placeholder.2024.003",
+    "pubmed": "00000003",
+    "tags": ["Time-to-onset", "Weibull", "Drug safety"],
+    "featured": false
+  },
+  {
+    "title": "[Representative publication placeholder] Multi-omics signatures of inflammaging in a longitudinal cohort",
+    "authors": "[Author F], [PI Name]",
+    "journal": "[Journal placeholder]",
+    "year": 2023,
+    "doi": "10.0000/placeholder.2023.004",
+    "pubmed": "00000004",
+    "tags": ["Multi-omics", "Inflammaging", "Aging"],
+    "featured": false
+  }
+]

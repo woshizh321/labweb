@@ -1,0 +1,43 @@
+# Phase-1 stack: frontend + backend + nginx. No database.
+# Usage:
+#   cp .env.example .env   # then edit values
+#   docker compose up -d --build
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+    image: lab-website-frontend
+    expose:
+      - "3000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+    image: lab-website-backend
+    expose:
+      - "8000"
+    environment:
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost}
+    restart: unless-stopped
+    # Liveness via Python stdlib only (slim image has no curl/wget).
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3).read()\" || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  nginx:
+    image: nginx:1.27-alpine
+    depends_on:
+      - frontend
+      - backend
+    ports:
+      - "${HTTP_PORT:-80}:80"
+    volumes:
+      - ./nginx/lab.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped

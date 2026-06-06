@@ -1,0 +1,34 @@
+[
+  {
+    "name": "[Alumnus A placeholder]",
+    "degree": "PhD",
+    "period": "2018–2022",
+    "currentPosition": "Postdoctoral Fellow",
+    "currentInstitution": "[University Hospital placeholder]",
+    "researchFocus": "Clinical prediction modeling"
+  },
+  {
+    "name": "[Alumnus B placeholder]",
+    "degree": "MSc",
+    "period": "2019–2021",
+    "currentPosition": "Biostatistician",
+    "currentInstitution": "[Pharmaceutical company placeholder]",
+    "researchFocus": "Pharmacovigilance analytics"
+  },
+  {
+    "name": "[Alumnus C placeholder]",
+    "degree": "PhD",
+    "period": "2016–2020",
+    "currentPosition": "Assistant Professor",
+    "currentInstitution": "[Medical School placeholder]",
+    "researchFocus": "Multi-omics of inflammation"
+  },
+  {
+    "name": "[Alumnus D placeholder]",
+    "degree": "MSc",
+    "period": "2020–2022",
+    "currentPosition": "Data Scientist",
+    "currentInstitution": "[Health-tech company placeholder]",
+    "researchFocus": "Real-world evidence"
+  }
+]

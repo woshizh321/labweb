@@ -1,0 +1,32 @@
+[
+  {
+    "id": "plan-c",
+    "name": "PLAN-C Calculator",
+    "description": "A research calculator prototype for composite risk estimation in a defined clinical context.",
+    "clinicalContext": "Risk stratification support for research and educational use.",
+    "status": "Coming soon",
+    "route": "/models/plan-c",
+    "version": "v0.1.0-draft",
+    "disclaimer": "This tool is intended for research and educational use only. It is not a substitute for professional medical judgment, diagnosis, or treatment."
+  },
+  {
+    "id": "diki-risk",
+    "name": "DIKI Risk Predictor",
+    "description": "Prototype interpretable model for drug-induced kidney injury (DIKI) risk estimation.",
+    "clinicalContext": "Exploratory risk stratification for drug-induced kidney injury research.",
+    "status": "Prototype",
+    "route": "/models/diki-risk",
+    "version": "v0.2.0-prototype",
+    "disclaimer": "This tool is intended for research and educational use only. It is not a substitute for professional medical judgment, diagnosis, or treatment."
+  },
+  {
+    "id": "ici-hepatobiliary",
+    "name": "ICI Hepatobiliary Toxicity Explorer",
+    "description": "Interactive explorer for immune checkpoint inhibitor-related hepatobiliary toxicity signals.",
+    "clinicalContext": "Signal exploration and education on ICI-related hepatobiliary adverse events.",
+    "status": "Available",
+    "route": "/models/ici-hepatobiliary",
+    "version": "v1.0.0",
+    "disclaimer": "This tool is intended for research and educational use only. It is not a substitute for professional medical judgment, diagnosis, or treatment."
+  }
+]
