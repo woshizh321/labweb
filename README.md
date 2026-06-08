@@ -139,12 +139,48 @@ Map Figma tokens onto these, and components re-skin without page rewrites.
 
 ## Adding a real prediction model later
 
-1. Frontend: add a card to `frontend/data/models.json`; the dynamic route
-   `frontend/app/models/[modelId]/page.tsx` already renders the detail skeleton.
-2. Backend: drop the artifact in `backend/model_artifacts/`, add a service +
-   schema + route (see `backend/README.md`). Keep the research-use disclaimer
-   and version fields in every response.
-3. Optional heavy apps (Streamlit / Gradio): mount under nginx `/apps/`.
+A model card always lives in `frontend/data/models.json` (id, route `/models/<id>`,
+status, version, disclaimer); the dynamic route `frontend/app/models/[modelId]/page.tsx`
+renders it. How the tool itself runs depends on its type:
+
+### A. Embed an interactive static tool (the PLAN-C pattern — recommended)
+
+For a self-contained client-side app (e.g. a Vite/React SPA that computes in the
+browser), vendor its build into the site and embed it via an iframe — no backend,
+no extra container.
+
+1. **Build + vendor** with the one-command helper (rebuilds with the correct base
+   `/apps/<id>/` and copies `dist/` into `frontend/public/apps/<id>/`):
+   ```bash
+   scripts/sync-model.sh <model-id> <source-spa-dir>
+   # e.g. scripts/sync-model.sh plan-c /Users/hezhu/projects/LatentIRI/cdss
+   ```
+   The frontend container then serves it at `/apps/<id>/` (nginx routes `/apps/*`
+   to the frontend via the catch-all — no nginx/compose change needed).
+2. **Register the embed** in `frontend/app/models/[modelId]/page.tsx`:
+   ```ts
+   const MODEL_EMBEDS = { '<model-id>': '/apps/<model-id>/index.html', /* ... */ };
+   ```
+   (Kept in code, not in `models.json`, to preserve the data-structure lock.)
+   The detail page shows the disclaimer + an iframe with an "open in new tab" link.
+3. **Add the card** to `frontend/data/models.json` (set `status` to `Available`)
+   and commit `frontend/public/apps/<id>/` together with the edits above.
+
+Reference implementation: **PLAN-C Compass** at `/models/plan-c` → `/apps/plan-c/`.
+To update a tool later, just re-run `scripts/sync-model.sh <id> <dir>` and commit.
+
+### B. Backend-inference model
+
+For server-side inference, drop the artifact in `backend/model_artifacts/`, add a
+service + schema + route (see `backend/README.md`), and keep the research-use
+disclaimer and version fields in every response. The detail page's reserved section
+skeleton (overview / inputs / output / interpretation / performance / citation) is
+already in place for non-embedded models.
+
+### C. Heavy interactive services (Streamlit / Gradio)
+
+Run as their own container and add a dedicated `upstream` + `location /apps/<id>/`
+block in `nginx/lab.conf` pointing at it.
 
 ## AI coding tools
 
