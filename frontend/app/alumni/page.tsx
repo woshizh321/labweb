@@ -4,22 +4,24 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { AlumniCard } from '@/components/cards/AlumniCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { getAlumni } from '@/lib/data';
+import { getDict, getLang } from '@/lib/getLang';
 
 export const metadata: Metadata = { title: 'Alumni' };
 
 export default function AlumniPage() {
+  const d = getDict(getLang());
   const alumni = getAlumni();
 
   return (
-    <PageContainer className="py-16">
+    <PageContainer className="py-14">
       <SectionHeader
-        eyebrow="Alumni"
-        title="Where our members are now"
-        description="Former lab members and their current positions. Content is driven by data/alumni.json."
+        eyebrow={d.alumni.eyebrow}
+        title={d.alumni.title}
+        description={d.alumni.description}
       />
 
       {alumni.length === 0 ? (
-        <EmptyState title="No alumni listed yet" description="Add entries to data/alumni.json." />
+        <EmptyState title={d.alumni.empty} description={d.alumni.emptyDesc} />
       ) : (
         <div className="grid gap-4 lg:grid-cols-2">
           {alumni.map((a) => (

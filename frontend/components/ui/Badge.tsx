@@ -2,12 +2,13 @@ import type { ReactNode } from 'react';
 
 type Tone = 'neutral' | 'accent' | 'info' | 'success' | 'warning';
 
+// Quiet, mostly gray-blue chips. Green appears only as a faint status tint (success/accent).
 const tones: Record<Tone, string> = {
   neutral: 'bg-muted text-ink-secondary border-border',
-  accent: 'bg-accent-light text-accent-dark border-accent-light',
-  info: 'bg-blue-50 text-info border-blue-100',
-  success: 'bg-accent-light text-success border-accent-light',
-  warning: 'bg-amber-50 text-warning border-amber-100',
+  accent: 'bg-muted text-secondary border-border',          // keyword/method chip (slate-blue)
+  info: 'bg-muted text-info border-border',                  // status: prototype
+  success: 'bg-accent-light text-accent-dark border-accent-light', // status: available (faint green)
+  warning: 'bg-muted text-warning border-border',
 };
 
 export function Badge({
@@ -19,7 +20,7 @@ export function Badge({
 }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ${tones[tone]}`}
+      className={`inline-flex items-center rounded-[0.25rem] border px-2 py-0.5 text-xs font-medium ${tones[tone]}`}
     >
       {children}
     </span>

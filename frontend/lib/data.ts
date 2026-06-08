@@ -18,9 +18,11 @@ import type {
 
 const MEMBER_GROUP_ORDER: MemberGroup[] = [
   'PI',
-  'Faculty / Staff',
+  'Faculty',
+  'Technical Staff',
   'PhD Students',
   'Master Students',
+  'Joint-Training PhD',
   'Visiting Students',
 ];
 

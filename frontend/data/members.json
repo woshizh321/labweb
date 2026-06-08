@@ -1,72 +1,132 @@
 [
   {
-    "name": "[PI Name placeholder]",
-    "role": "Principal Investigator",
-    "degree": "MD, PhD",
+    "name": "郑芳 Zheng Fang",
+    "role": "Professor & Principal Investigator",
+    "degree": "",
     "group": "PI",
-    "researchFocus": "Pharmacovigilance, real-world evidence, interpretable clinical prediction",
-    "email": "pi@example.edu",
+    "researchFocus": "Alarmins (HMGB1, IL-33), inflammation, autoimmunity, and transplant immunology",
+    "email": "",
     "avatar": "",
-    "bio": "Principal investigator focused on bridging real-world clinical data with interpretable machine-learning models for drug safety and risk stratification."
+    "bio": ""
   },
   {
-    "name": "[Co-Investigator placeholder]",
-    "role": "Associate Researcher",
-    "degree": "PhD",
-    "group": "Faculty / Staff",
-    "researchFocus": "Multi-omics integration, immune-inflammatory mechanisms",
-    "email": "staff1@example.edu",
+    "name": "方敏 Fang Min",
+    "role": "Professor",
+    "degree": "",
+    "group": "Faculty",
+    "researchFocus": "",
+    "email": "",
     "avatar": "",
-    "bio": "Leads multi-omics mechanistic studies linking chronic inflammation to age-related disease."
+    "bio": ""
   },
   {
-    "name": "[Data Scientist placeholder]",
-    "role": "Research Data Scientist",
-    "degree": "MSc",
-    "group": "Faculty / Staff",
-    "researchFocus": "FAERS/JADER pipelines, disproportionality analysis, model engineering",
-    "email": "staff2@example.edu",
+    "name": "谭政 Tan Zheng",
+    "role": "Professor",
+    "degree": "",
+    "group": "Faculty",
+    "researchFocus": "",
+    "email": "",
     "avatar": "",
-    "bio": "Builds and maintains the lab's pharmacovigilance data pipelines and model artifacts."
+    "bio": ""
   },
   {
-    "name": "[PhD Student A placeholder]",
-    "role": "PhD Candidate",
-    "degree": "PhD (in progress)",
+    "name": "王晨晨 Wang Chenchen",
+    "role": "Research Technician",
+    "degree": "",
+    "group": "Technical Staff",
+    "researchFocus": "",
+    "email": "",
+    "avatar": "",
+    "bio": ""
+  },
+  {
+    "name": "张娜 Zhang Na",
+    "role": "PhD Student",
+    "degree": "",
     "group": "PhD Students",
-    "researchFocus": "ICI hepatobiliary toxicity, immune-related adverse events",
-    "email": "phd1@example.edu",
+    "researchFocus": "",
+    "email": "",
     "avatar": "",
-    "bio": "Studies immune checkpoint inhibitor-related hepatobiliary injury using real-world reporting data."
+    "bio": ""
   },
   {
-    "name": "[PhD Student B placeholder]",
-    "role": "PhD Candidate",
-    "degree": "PhD (in progress)",
+    "name": "汤绪桓 Tang Xuhuan",
+    "role": "PhD Student",
+    "degree": "",
     "group": "PhD Students",
-    "researchFocus": "Drug-induced kidney injury risk modeling",
-    "email": "phd2@example.edu",
+    "researchFocus": "",
+    "email": "",
     "avatar": "",
-    "bio": "Develops interpretable risk-prediction models for drug-induced kidney injury."
+    "bio": ""
   },
   {
-    "name": "[Master Student A placeholder]",
+    "name": "李文华 Li Wenhua",
+    "role": "PhD Student",
+    "degree": "",
+    "group": "PhD Students",
+    "researchFocus": "",
+    "email": "",
+    "avatar": "",
+    "bio": ""
+  },
+  {
+    "name": "祝贺 Zhu He",
+    "role": "PhD Student",
+    "degree": "",
+    "group": "PhD Students",
+    "researchFocus": "",
+    "email": "",
+    "avatar": "",
+    "bio": ""
+  },
+  {
+    "name": "杨帆 Yang Fan",
     "role": "Master Student",
-    "degree": "MSc (in progress)",
+    "degree": "",
     "group": "Master Students",
-    "researchFocus": "Time-to-onset kinetics, Weibull modeling",
-    "email": "ms1@example.edu",
+    "researchFocus": "",
+    "email": "",
     "avatar": "",
-    "bio": "Investigates adverse-event onset timing using time-to-onset kinetic models."
+    "bio": ""
   },
   {
-    "name": "[Visiting Student placeholder]",
-    "role": "Visiting Research Student",
+    "name": "陈群 Chen Qun",
+    "role": "Master Student",
+    "degree": "",
+    "group": "Master Students",
+    "researchFocus": "",
+    "email": "",
+    "avatar": "",
+    "bio": ""
+  },
+  {
+    "name": "高婷婷 Gao Tingting",
+    "role": "Master Student",
+    "degree": "",
+    "group": "Master Students",
+    "researchFocus": "",
+    "email": "",
+    "avatar": "",
+    "bio": ""
+  },
+  {
+    "name": "柴帅帅 Chai Shuaishuai",
+    "role": "Joint-Training PhD Student",
+    "degree": "",
+    "group": "Joint-Training PhD",
+    "researchFocus": "",
+    "email": "",
+    "avatar": "",
+    "bio": ""
+  },
+  {
+    "name": "胡垚森 Hu Yaosen",
+    "role": "Visiting Student",
     "degree": "Undergraduate",
     "group": "Visiting Students",
-    "researchFocus": "Literature curation, data annotation",
-    "email": "visit1@example.edu",
+    "researchFocus": "",
+    "email": "",
     "avatar": "",
-    "bio": "Supports systematic literature curation and structured data annotation."
+    "bio": ""
   }
 ]

@@ -4,9 +4,9 @@
 
 /* Design tokens mirrored as CSS variables for easy re-skinning from a Figma spec. */
 :root {
-  --color-primary: #13315c;
-  --color-accent: #1f9d6b;
-  --max-page: 1200px;
+  --color-primary: #1b3a5b;
+  --color-accent: #3f6f5e;
+  --max-page: 1080px;
 }
 
 @layer base {
@@ -29,5 +29,9 @@
   /* Shared content rhythm helpers (kept minimal — no heavy animation). */
   .link-quiet {
     @apply text-secondary hover:text-primary underline-offset-4 hover:underline;
+  }
+  /* Quiet uppercase eyebrow label for section headers (academic, not SaaS green). */
+  .eyebrow {
+    @apply text-caption font-semibold uppercase tracking-wide text-ink-muted;
   }
 }

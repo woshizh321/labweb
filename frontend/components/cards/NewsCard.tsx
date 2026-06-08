@@ -1,22 +1,25 @@
 import { Badge } from '@/components/ui/Badge';
 import type { NewsItem } from '@/lib/types';
+import { getDict, getLang } from '@/lib/getLang';
 
 export function NewsCard({ news }: { news: NewsItem }) {
-  const date = new Date(news.date).toLocaleDateString('en-US', {
+  const lang = getLang();
+  const d = getDict(lang);
+  const date = new Date(news.date).toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
   });
   return (
-    <article className="rounded-card border border-border bg-card p-5 shadow-card">
+    <article className="border-b border-border bg-card pb-4">
       <div className="flex items-center justify-between gap-3">
-        <Badge tone="accent">{news.category}</Badge>
+        <Badge tone="neutral">{d.news.categories[news.category] ?? news.category}</Badge>
         <time className="text-caption text-ink-muted" dateTime={news.date}>
           {date}
         </time>
       </div>
-      <h3 className="mt-3 text-base font-semibold text-primary">{news.title}</h3>
-      <p className="mt-1 text-sm text-ink-secondary">{news.summary}</p>
+      <h3 className="mt-2.5 text-base font-semibold leading-snug text-primary">{news.title}</h3>
+      <p className="mt-1 text-sm leading-relaxed text-ink-secondary">{news.summary}</p>
     </article>
   );
 }

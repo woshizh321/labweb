@@ -7,6 +7,7 @@ import { DisclaimerBox } from '@/components/ui/DisclaimerBox';
 import { LinkButton } from '@/components/ui/Button';
 import { getModels, getModelById } from '@/lib/data';
 import type { ModelStatus } from '@/lib/types';
+import { getDict, getLang } from '@/lib/getLang';
 
 /** Pre-render every known model id at build time. */
 export function generateStaticParams() {
@@ -38,45 +39,24 @@ export default function ModelDetailPage({ params }: { params: { modelId: string 
   const model = getModelById(params.modelId);
   if (!model) notFound();
 
-  const sections = [
-    { title: 'Model overview', body: model.description },
-    { title: 'Intended use', body: model.clinicalContext },
-    {
-      title: 'Input variables',
-      body: 'Placeholder — the input variable schema and a validated prediction form will be added here.',
-    },
-    {
-      title: 'Prediction & risk output',
-      body: 'Placeholder — model output, risk stratification, and confidence will appear here once inference is connected to the backend.',
-    },
-    {
-      title: 'Interpretation',
-      body: 'Placeholder — variable-level explanation (e.g., SHAP) and guidance on how to read the result.',
-    },
-    {
-      title: 'Performance metrics',
-      body: 'Placeholder — discrimination, calibration, and validation cohort details.',
-    },
-    {
-      title: 'Not applicable to',
-      body: 'Placeholder — populations and scenarios where this model should not be used.',
-    },
-    {
-      title: 'Citation',
-      body: 'Placeholder — how to cite this model and the underlying study.',
-    },
-  ];
+  const d = getDict(getLang());
+  const md = d.models.detail;
+  // Section bodies: first two come from model data; the rest are translated placeholders.
+  const sections = md.sections.map((s, i) => ({
+    title: s.title,
+    body: i === 0 ? model.description : i === 1 ? model.clinicalContext : s.body,
+  }));
 
   return (
-    <PageContainer className="py-16">
+    <PageContainer className="py-14">
       <Link href="/models" className="link-quiet text-sm">
-        ← Back to models
+        {md.back}
       </Link>
 
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <h1 className="text-h1 text-primary">{model.name}</h1>
-        <Badge tone={statusTone[model.status]}>{model.status}</Badge>
-        <Badge tone="neutral">Version {model.version}</Badge>
+        <Badge tone={statusTone[model.status]}>{d.models.status[model.status] ?? model.status}</Badge>
+        <Badge tone="neutral">{d.models.version} {model.version}</Badge>
       </div>
       <p className="mt-3 max-w-2xl text-ink-secondary">{model.description}</p>
 
@@ -86,25 +66,18 @@ export default function ModelDetailPage({ params }: { params: { modelId: string 
 
       <div className="mt-10 grid gap-5 lg:grid-cols-2">
         {sections.map((s) => (
-          <section
-            key={s.title}
-            className="rounded-card border border-border bg-card p-6 shadow-card"
-          >
+          <section key={s.title} className="border border-border bg-card p-6">
             <h2 className="text-h3 text-primary">{s.title}</h2>
             <p className="mt-2 text-sm text-ink-secondary">{s.body}</p>
           </section>
         ))}
       </div>
 
-      <div className="mt-10 rounded-card border border-dashed border-border bg-muted/50 p-6">
-        <p className="text-sm text-ink-secondary">
-          This is a structural placeholder. The interactive prediction form will call the
-          backend API (<code className="text-ink">POST /api/predict/&lt;model&gt;</code>) and
-          render results here. Until then, no inference is performed.
-        </p>
+      <div className="mt-10 border border-dashed border-border bg-muted/50 p-6">
+        <p className="text-sm text-ink-secondary">{md.placeholderNote}</p>
         <div className="mt-4">
           <LinkButton href="/contact" variant="ghost">
-            Ask about this model
+            {md.ask}
           </LinkButton>
         </div>
       </div>

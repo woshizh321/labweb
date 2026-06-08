@@ -4,27 +4,29 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { PublicationCard } from '@/components/cards/PublicationCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { getPublications } from '@/lib/data';
+import { getDict, getLang } from '@/lib/getLang';
 
 export const metadata: Metadata = { title: 'Publications' };
 
 export default function PublicationsPage() {
-  const publications = getPublications();
+  const d = getDict(getLang());
+  // getPublications() is year-sorted; pin featured entries to the top (stable sort).
+  const publications = getPublications()
+    .slice()
+    .sort((a, b) => Number(b.featured) - Number(a.featured));
 
   return (
-    <PageContainer className="py-16">
+    <PageContainer className="py-14">
       <SectionHeader
-        eyebrow="Publications"
-        title="Representative publications"
-        description="Selected work from the lab. Content is driven by data/publications.json."
+        eyebrow={d.publications.eyebrow}
+        title={d.publications.title}
+        description={d.publications.description}
       />
 
       {publications.length === 0 ? (
-        <EmptyState
-          title="No publications listed yet"
-          description="Add entries to data/publications.json."
-        />
+        <EmptyState title={d.publications.empty} description={d.publications.emptyDesc} />
       ) : (
-        <div className="grid gap-5">
+        <div className="space-y-2">
           {publications.map((p) => (
             <PublicationCard key={p.doi || p.title} publication={p} />
           ))}

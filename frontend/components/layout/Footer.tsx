@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import { site } from '@/lib/site';
 import { PageContainer } from '@/components/ui/PageContainer';
+import { getDict, type Lang } from '@/lib/i18n';
 
-export function Footer() {
+export function Footer({ lang }: { lang: Lang }) {
+  const d = getDict(lang);
   const year = new Date().getFullYear();
   const range =
     year > site.copyrightFrom ? `${site.copyrightFrom}–${year}` : `${site.copyrightFrom}`;
@@ -12,17 +14,17 @@ export function Footer() {
       <PageContainer className="py-12">
         <div className="grid gap-8 md:grid-cols-3">
           <div>
-            <p className="text-base font-semibold text-primary">{site.name}</p>
-            <p className="mt-2 max-w-sm text-sm text-ink-secondary">{site.tagline}</p>
+            <p className="text-base font-semibold text-primary">{d.labName}</p>
+            <p className="mt-2 max-w-sm text-sm text-ink-secondary">{d.tagline}</p>
           </div>
 
           <div>
-            <p className="text-sm font-semibold text-ink">Navigate</p>
+            <p className="text-sm font-semibold text-ink">{d.footer.navigate}</p>
             <ul className="mt-3 grid grid-cols-2 gap-1">
               {site.nav.map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className="link-quiet text-sm">
-                    {item.label}
+                    {d.nav[item.href] ?? item.label}
                   </Link>
                 </li>
               ))}
@@ -30,9 +32,9 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-sm font-semibold text-ink">Contact</p>
+            <p className="text-sm font-semibold text-ink">{d.footer.contact}</p>
             <ul className="mt-3 space-y-1 text-sm text-ink-secondary">
-              <li>{site.institution}</li>
+              <li>{d.institution}</li>
               <li>{site.address}</li>
               <li>
                 <a href={`mailto:${site.email}`} className="link-quiet">
@@ -44,8 +46,7 @@ export function Footer() {
         </div>
 
         <div className="mt-10 border-t border-border pt-6 text-caption text-ink-muted">
-          © {range} {site.name}. All rights reserved. · This site does not process real
-          patient-level or personally identifiable data.
+          © {range} {d.labName}. {d.footer.rights} · {d.footer.privacy}
         </div>
       </PageContainer>
     </footer>

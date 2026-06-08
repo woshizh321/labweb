@@ -20,3 +20,9 @@ backend/model_artifacts/*
 # OS / editor
 .DS_Store
 *.log
+
+# Working assets (raw source images etc.) — optimized outputs go in frontend/public
+Materials/
+
+# Stray root lockfile (no root package.json; frontend has its own)
+/package-lock.json

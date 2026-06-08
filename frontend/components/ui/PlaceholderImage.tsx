@@ -21,7 +21,7 @@ export function PlaceholderImage({
   return (
     <div
       aria-hidden
-      className={`flex items-center justify-center bg-gradient-to-br from-muted to-accent-light text-primary ${rounded} ${className}`}
+      className={`flex items-center justify-center border border-border bg-muted text-ink-secondary ${rounded} ${className}`}
     >
       <span className="text-lg font-semibold tracking-wide">{initials || '—'}</span>
     </div>

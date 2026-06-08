@@ -2,130 +2,122 @@ import Link from 'next/link';
 import { HeroSection } from '@/components/sections/HeroSection';
 import { PageContainer } from '@/components/ui/PageContainer';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { LinkButton } from '@/components/ui/Button';
 import { ResearchCard } from '@/components/cards/ResearchCard';
-import { ModelCard } from '@/components/cards/ModelCard';
 import { PublicationCard } from '@/components/cards/PublicationCard';
 import { NewsCard } from '@/components/cards/NewsCard';
-import { researchAreas, site } from '@/lib/site';
-import { getModels, getFeaturedPublications, getNews } from '@/lib/data';
+import { getResearchAreas, site } from '@/lib/site';
+import { getFeaturedPublications, getNews } from '@/lib/data';
+import { getDict, getLang } from '@/lib/getLang';
 
 export default function HomePage() {
-  const models = getModels();
-  const featured = getFeaturedPublications().slice(0, 2);
-  const news = getNews().slice(0, 3);
+  const lang = getLang();
+  const d = getDict(lang);
+  const researchAreas = getResearchAreas(lang);
+  const featured = getFeaturedPublications().slice(0, 3);
+  const news = getNews().slice(0, 2);
 
   return (
     <>
       <HeroSection />
 
-      {/* Research overview */}
-      <PageContainer className="py-16">
-        <SectionHeader
-          eyebrow="What we study"
-          title="Research directions"
-          description="Five interconnected programs spanning real-world evidence, mechanism, and interpretable prediction."
-          action={
-            <LinkButton href="/research" variant="ghost">
-              All research →
-            </LinkButton>
-          }
-        />
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {researchAreas.slice(0, 3).map((area) => (
-            <ResearchCard key={area.id} area={area} />
-          ))}
+      {/* 1. About the lab — one short paragraph */}
+      <PageContainer className="py-12">
+        <div className="max-w-3xl">
+          <p className="eyebrow mb-2">{d.home.aboutEyebrow}</p>
+          <p className="text-lg leading-relaxed text-ink-secondary">{d.home.aboutBody}</p>
+          <Link href="/about" className="link-quiet mt-3 inline-block text-sm font-medium">
+            {d.home.aboutMore}
+          </Link>
         </div>
       </PageContainer>
 
-      {/* Quick entries */}
-      <div className="bg-muted">
+      {/* 2. Research focus — four themes */}
+      <div className="border-y border-border bg-muted">
         <PageContainer className="py-12">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { href: '/members', label: 'Members', desc: 'Meet the team' },
-              { href: '/models', label: 'Prediction models', desc: 'Research tools' },
-              { href: '/publications', label: 'Publications', desc: 'Representative work' },
-              { href: '/contact', label: 'Contact', desc: 'Collaborate & join' },
-            ].map((e) => (
-              <Link
-                key={e.href}
-                href={e.href}
-                className="rounded-card border border-border bg-card p-5 shadow-card transition-shadow hover:shadow-card-hover"
-              >
-                <p className="text-base font-semibold text-primary">{e.label}</p>
-                <p className="mt-1 text-sm text-ink-secondary">{e.desc} →</p>
+          <SectionHeader
+            eyebrow={d.home.researchEyebrow}
+            title={d.home.researchTitle}
+            action={
+              <Link href="/research" className="link-quiet text-sm font-medium">
+                {d.home.more}
               </Link>
+            }
+          />
+          <div className="grid gap-5 sm:grid-cols-2">
+            {researchAreas.map((area) => (
+              <ResearchCard key={area.id} area={area} />
             ))}
           </div>
         </PageContainer>
       </div>
 
-      {/* Models */}
-      <PageContainer className="py-16">
-        <SectionHeader
-          eyebrow="Prediction platform"
-          title="Research prediction models"
-          description="Interpretable, version-tracked tools for research and education only — never for diagnosis."
-          action={
-            <LinkButton href="/models" variant="ghost">
-              All models →
-            </LinkButton>
-          }
-        />
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {models.map((m) => (
-            <ModelCard key={m.id} model={m} />
-          ))}
+      {/* 3. People preview — a single summary sentence, not a team wall */}
+      <PageContainer className="py-12">
+        <div className="max-w-3xl">
+          <p className="eyebrow mb-2">{d.home.peopleEyebrow}</p>
+          <p className="text-ink-secondary">{d.home.peopleSummary}</p>
+          <Link href="/members" className="link-quiet mt-3 inline-block text-sm font-medium">
+            {d.home.peopleMore}
+          </Link>
         </div>
       </PageContainer>
 
-      {/* Featured publications + news */}
-      <div className="bg-muted">
-        <PageContainer className="py-16">
-          <div className="grid gap-10 lg:grid-cols-2">
-            <div>
-              <SectionHeader
-                eyebrow="Selected work"
-                title="Featured publications"
-                action={
-                  <LinkButton href="/publications" variant="ghost">
-                    All →
-                  </LinkButton>
-                }
-              />
-              <div className="grid gap-4">
-                {featured.map((p) => (
-                  <PublicationCard key={p.doi} publication={p} />
-                ))}
-              </div>
-            </div>
-            <div>
-              <SectionHeader eyebrow="Updates" title="Latest news" />
-              <div className="grid gap-4">
-                {news.map((n) => (
-                  <NewsCard key={n.title} news={n} />
-                ))}
-              </div>
-            </div>
+      {/* 4. Selected publications */}
+      <div className="border-y border-border bg-muted">
+        <PageContainer className="py-12">
+          <SectionHeader
+            eyebrow={d.home.pubEyebrow}
+            title={d.home.pubTitle}
+            action={
+              <Link href="/publications" className="link-quiet text-sm font-medium">
+                {d.home.pubAll}
+              </Link>
+            }
+          />
+          <div className="space-y-2">
+            {featured.map((p) => (
+              <PublicationCard key={p.doi} publication={p} />
+            ))}
           </div>
         </PageContainer>
       </div>
 
-      {/* Contact strip */}
-      <PageContainer className="py-16">
-        <div className="rounded-card border border-border bg-primary p-8 text-white sm:p-10">
-          <h2 className="text-h2 text-white">Interested in collaborating or joining?</h2>
-          <p className="mt-2 max-w-2xl text-white/80">
-            We welcome collaborations and prospective students across pharmacovigilance,
-            real-world evidence, and interpretable clinical AI.
-          </p>
-          <div className="mt-6">
-            <LinkButton href="/contact" variant="secondary">
-              Get in touch
-            </LinkButton>
+      {/* 5. Research tools / models — kept low-key, after the main content */}
+      <PageContainer className="py-12">
+        <div className="max-w-3xl">
+          <p className="eyebrow mb-2">{d.home.toolsEyebrow}</p>
+          <p className="text-ink-secondary">{d.home.toolsBody}</p>
+          <Link href="/models" className="link-quiet mt-3 inline-block text-sm font-medium">
+            {d.home.toolsMore}
+          </Link>
+        </div>
+      </PageContainer>
+
+      {/* 6. News — slim single-column list */}
+      <div className="border-y border-border bg-muted">
+        <PageContainer className="py-12">
+          <SectionHeader eyebrow={d.home.newsEyebrow} title={d.home.newsTitle} />
+          <div className="max-w-3xl space-y-4">
+            {news.map((n) => (
+              <NewsCard key={n.title} news={n} />
+            ))}
           </div>
-          <p className="mt-4 text-caption text-white/60">{site.email}</p>
+        </PageContainer>
+      </div>
+
+      {/* 7. Contact — compact block (full details live in the footer / Contact page) */}
+      <PageContainer className="py-12">
+        <div className="max-w-3xl">
+          <p className="eyebrow mb-2">{d.home.contactEyebrow}</p>
+          <p className="text-ink-secondary">{d.home.contactBody}</p>
+          <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+            <Link href="/contact" className="link-quiet font-medium">
+              {d.home.contactMore}
+            </Link>
+            <a href={`mailto:${site.email}`} className="link-quiet font-medium">
+              {site.email}
+            </a>
+          </div>
         </div>
       </PageContainer>
     </>
