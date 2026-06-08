@@ -29,6 +29,13 @@ const statusTone: Record<ModelStatus, 'neutral' | 'info' | 'success'> = {
   Available: 'success',
 };
 
+// Models whose interactive tool is deployed as a static bundle under
+// frontend/public/apps/<id>/. Kept here (not in models.json) to avoid changing
+// the data-structure fields. The page embeds the tool below the disclaimer.
+const MODEL_EMBEDS: Record<string, string> = {
+  'plan-c': '/apps/plan-c/index.html',
+};
+
 /**
  * Phase-1 model detail page = structured placeholder. The sections below are the
  * reserved skeleton for future model pages (overview / intended use / input form /
@@ -41,6 +48,7 @@ export default function ModelDetailPage({ params }: { params: { modelId: string 
 
   const d = getDict(getLang());
   const md = d.models.detail;
+  const embedUrl = MODEL_EMBEDS[model.id];
   // Section bodies: first two come from model data; the rest are translated placeholders.
   const sections = md.sections.map((s, i) => ({
     title: s.title,
@@ -64,23 +72,50 @@ export default function ModelDetailPage({ params }: { params: { modelId: string 
         <DisclaimerBox custom={model.disclaimer} />
       </div>
 
-      <div className="mt-10 grid gap-5 lg:grid-cols-2">
-        {sections.map((s) => (
-          <section key={s.title} className="border border-border bg-card p-6">
-            <h2 className="text-h3 text-primary">{s.title}</h2>
-            <p className="mt-2 text-sm text-ink-secondary">{s.body}</p>
-          </section>
-        ))}
-      </div>
+      {embedUrl ? (
+        /* Live interactive tool (static bundle under /apps/<id>/). */
+        <section className="mt-10">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <h2 className="text-h3 text-primary">{md.toolHeading}</h2>
+            <a
+              href={embedUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-quiet text-sm font-medium"
+            >
+              {md.openNewTab}
+            </a>
+          </div>
+          <div className="overflow-hidden border border-border bg-card">
+            <iframe
+              src={embedUrl}
+              title={model.name}
+              loading="lazy"
+              className="h-[1600px] w-full"
+            />
+          </div>
+        </section>
+      ) : (
+        <>
+          <div className="mt-10 grid gap-5 lg:grid-cols-2">
+            {sections.map((s) => (
+              <section key={s.title} className="border border-border bg-card p-6">
+                <h2 className="text-h3 text-primary">{s.title}</h2>
+                <p className="mt-2 text-sm text-ink-secondary">{s.body}</p>
+              </section>
+            ))}
+          </div>
 
-      <div className="mt-10 border border-dashed border-border bg-muted/50 p-6">
-        <p className="text-sm text-ink-secondary">{md.placeholderNote}</p>
-        <div className="mt-4">
-          <LinkButton href="/contact" variant="ghost">
-            {md.ask}
-          </LinkButton>
-        </div>
-      </div>
+          <div className="mt-10 border border-dashed border-border bg-muted/50 p-6">
+            <p className="text-sm text-ink-secondary">{md.placeholderNote}</p>
+            <div className="mt-4">
+              <LinkButton href="/contact" variant="ghost">
+                {md.ask}
+              </LinkButton>
+            </div>
+          </div>
+        </>
+      )}
     </PageContainer>
   );
 }

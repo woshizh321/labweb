@@ -1,12 +1,12 @@
 [
   {
     "id": "plan-c",
-    "name": "PLAN-C Calculator",
-    "description": "A research calculator prototype for composite risk estimation in a defined clinical context.",
-    "clinicalContext": "Risk stratification support for research and educational use.",
-    "status": "Coming soon",
+    "name": "PLAN-C Compass",
+    "description": "An interactive research calculator for the Immune Resilience Index, with percentile reporting and growth-style charts.",
+    "clinicalContext": "Immune resilience percentile estimation for research and educational use.",
+    "status": "Available",
     "route": "/models/plan-c",
-    "version": "v0.1.0-draft",
+    "version": "v1.0.0",
     "disclaimer": "This tool is intended for research and educational use only. It is not a substitute for professional medical judgment, diagnosis, or treatment."
   },
   {

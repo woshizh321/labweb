@@ -88,6 +88,8 @@ type Dict = {
       sections: { title: string; body: string }[];
       placeholderNote: string;
       ask: string;
+      toolHeading: string;
+      openNewTab: string;
     };
   };
   news: { categories: Record<string, string> };
@@ -266,6 +268,8 @@ const en: Dict = {
       placeholderNote:
         'This is a structural placeholder. The interactive prediction form will call the backend API (POST /api/predict/<model>) and render results here. Until then, no inference is performed.',
       ask: 'Ask about this model',
+      toolHeading: 'Interactive tool',
+      openNewTab: 'Open in a new tab ↗',
     },
   },
   news: { categories: { Project: 'Project', Publication: 'Publication', People: 'People' } },
@@ -446,6 +450,8 @@ const zh: Dict = {
       placeholderNote:
         '此为结构占位。交互式预测表单将调用后端接口（POST /api/predict/<model>）并在此渲染结果；在此之前不执行任何推理。',
       ask: '咨询此模型',
+      toolHeading: '交互式工具',
+      openNewTab: '在新标签页打开 ↗',
     },
   },
   news: { categories: { Project: '项目', Publication: '论文', People: '人员' } },
