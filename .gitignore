@@ -13,9 +13,12 @@ __pycache__/
 *.pyc
 backend/.venv/
 
-# Model binaries (keep the directory via .gitkeep, ignore large weights)
+# Model binaries (keep the directory via .gitkeep, ignore large weights).
+# Small, deployable artifacts are committed per-model so the server gets them on pull.
 backend/model_artifacts/*
 !backend/model_artifacts/.gitkeep
+!backend/model_artifacts/kawasaki_ivig/
+!backend/model_artifacts/kawasaki_ivig/**
 
 # OS / editor
 .DS_Store

@@ -177,6 +177,15 @@ disclaimer and version fields in every response. The detail page's reserved sect
 skeleton (overview / inputs / output / interpretation / performance / citation) is
 already in place for non-embedded models.
 
+Reference implementation: **Kawasaki_IVIG** at `/models/kawasaki-ivig`. The locked
+scikit-learn pipeline lives in `backend/model_artifacts/kawasaki_ivig/`; inference is
+`backend/app/services/kawasaki_ivig.py` + `schemas/kawasaki.py` + the
+`POST /api/predict/kawasaki-ivig` route; the bilingual form is
+`frontend/components/models/KawasakiPredictForm.tsx` (registered in the detail page's
+`MODEL_NATIVE_FORMS`) driven by `frontend/lib/kawasakiFields.ts`. Note: `scikit-learn`
+is pinned **exactly** to the version that serialized the joblib (`_sklearn_version`),
+or the artifact will not load.
+
 ### C. Heavy interactive services (Streamlit / Gradio)
 
 Run as their own container and add a dedicated `upstream` + `location /apps/<id>/`

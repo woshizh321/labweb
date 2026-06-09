@@ -8,6 +8,7 @@ import { LinkButton } from '@/components/ui/Button';
 import { getModels, getModelById } from '@/lib/data';
 import type { ModelStatus } from '@/lib/types';
 import { getDict, getLang } from '@/lib/getLang';
+import { KawasakiPredictForm } from '@/components/models/KawasakiPredictForm';
 
 /** Pre-render every known model id at build time. */
 export function generateStaticParams() {
@@ -36,6 +37,10 @@ const MODEL_EMBEDS: Record<string, string> = {
   'plan-c': '/apps/plan-c/index.html',
 };
 
+// Models whose interactive tool is a native bilingual form posting to the FastAPI
+// backend (path B: server-side inference). Kept in code, not in models.json.
+const MODEL_NATIVE_FORMS = new Set<string>(['kawasaki-ivig']);
+
 /**
  * Phase-1 model detail page = structured placeholder. The sections below are the
  * reserved skeleton for future model pages (overview / intended use / input form /
@@ -46,9 +51,11 @@ export default function ModelDetailPage({ params }: { params: { modelId: string 
   const model = getModelById(params.modelId);
   if (!model) notFound();
 
-  const d = getDict(getLang());
+  const lang = getLang();
+  const d = getDict(lang);
   const md = d.models.detail;
   const embedUrl = MODEL_EMBEDS[model.id];
+  const hasNativeForm = MODEL_NATIVE_FORMS.has(model.id);
   // Section bodies: first two come from model data; the rest are translated placeholders.
   const sections = md.sections.map((s, i) => ({
     title: s.title,
@@ -94,6 +101,12 @@ export default function ModelDetailPage({ params }: { params: { modelId: string 
               className="h-[1600px] w-full"
             />
           </div>
+        </section>
+      ) : hasNativeForm ? (
+        /* Native bilingual form -> FastAPI inference (path B). */
+        <section className="mt-10">
+          <h2 className="mb-3 text-h3 text-primary">{md.toolHeading}</h2>
+          <KawasakiPredictForm lang={lang} />
         </section>
       ) : (
         <>
