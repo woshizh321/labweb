@@ -69,6 +69,7 @@ type Dict = {
     eyebrow: string;
     title: string;
     description: string;
+    caption: string;
     empty: string;
     emptyDesc: string;
   };
@@ -215,7 +216,8 @@ const en: Dict = {
   alumni: {
     eyebrow: 'Alumni',
     title: 'Alumni',
-    description: 'Former lab members and their current positions.',
+    description: 'Former lab members across the years. A detailed alumni roster will be added later.',
+    caption: 'Lab family photo · taken September 10, 2024 (to be continued)',
     empty: 'Alumni information will be updated as the laboratory grows.',
     emptyDesc: '',
   },
@@ -409,7 +411,8 @@ const zh: Dict = {
   alumni: {
     eyebrow: '校友',
     title: '历届成员',
-    description: '实验室历届成员及其现任职位。',
+    description: '实验室历届成员合影。详细校友名录后续补充。',
+    caption: '师门合影 · 2024 年 9 月 10 日留念（未完待续）',
     empty: '校友信息将随实验室发展逐步更新。',
     emptyDesc: '',
   },
