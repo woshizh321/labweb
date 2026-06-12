@@ -108,7 +108,7 @@ type Dict = {
   };
   footer: { navigate: string; contact: string; rights: string; privacy: string };
   notFound: { code: string; title: string; body: string; home: string };
-  disclaimer: { heading: string; en: string; zh: string };
+  disclaimer: { heading: string; lead: string; points: string[] };
 };
 
 const en: Dict = {
@@ -303,8 +303,14 @@ const en: Dict = {
   },
   disclaimer: {
     heading: 'Research-use disclaimer / 研究用途声明',
-    en: 'This tool is intended for research and educational use only. It is not a substitute for professional medical judgment, diagnosis, or treatment.',
-    zh: '本工具仅用于科研和教学展示，不构成临床诊断、治疗建议或个体化医疗决策依据。',
+    lead: 'These prediction tools are provided for research and educational purposes only.',
+    points: [
+      'They are not a medical device and have not been approved or cleared by any regulator (e.g. NMPA, FDA, or CE).',
+      'They do not provide a diagnosis, treatment recommendation, or individualized medical advice, and must not be used for real clinical decisions.',
+      'Outputs are estimates from limited, mostly retrospective data and have not been prospectively or externally validated.',
+      'Do not enter any real or identifiable patient information; the tools do not process personal or patient-level data.',
+      'Always consult a qualified healthcare professional. The laboratory accepts no liability for any use of these tools or their outputs.',
+    ],
   },
 };
 
@@ -486,8 +492,14 @@ const zh: Dict = {
   },
   disclaimer: {
     heading: '研究用途声明 / Research-use disclaimer',
-    en: 'This tool is intended for research and educational use only. It is not a substitute for professional medical judgment, diagnosis, or treatment.',
-    zh: '本工具仅用于科研和教学展示，不构成临床诊断、治疗建议或个体化医疗决策依据。',
+    lead: '本系列预测工具仅用于科研与教学目的。',
+    points: [
+      '本工具非医疗器械，未经任何药品监督管理机构（如 NMPA、FDA、CE）审批或认证。',
+      '不提供诊断、治疗建议或个体化医疗决策依据，不得用于真实临床决策。',
+      '模型结果基于有限的、多为回顾性的数据，尚未经过前瞻性或外部验证。',
+      '请勿输入任何真实或可识别身份的患者信息；本工具不处理个人或患者级数据。',
+      '请始终咨询有资质的医疗专业人员。对于本工具及其输出的任何使用，本实验室概不负责。',
+    ],
   },
 };
 

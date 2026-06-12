@@ -76,7 +76,7 @@ export default function ModelDetailPage({ params }: { params: { modelId: string 
       <p className="mt-3 max-w-2xl text-ink-secondary">{model.description}</p>
 
       <div className="mt-8">
-        <DisclaimerBox custom={model.disclaimer} />
+        <DisclaimerBox />
       </div>
 
       {embedUrl ? (
