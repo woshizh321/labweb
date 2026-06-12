@@ -38,6 +38,12 @@ docker compose build
 echo "[deploy] Starting stack..."
 docker compose up -d
 
+# nginx resolves the frontend/backend container IPs once at startup. When those
+# services are recreated by a build, they get NEW IPs but nginx is left running with
+# the stale ones, causing 502s. Restarting nginx forces it to re-resolve the upstreams.
+echo "[deploy] Refreshing nginx upstreams..."
+docker compose restart nginx
+
 echo "[deploy] Current status:"
 docker compose ps
 
