@@ -3,12 +3,14 @@
 The catalog here is a small, static mirror of the frontend's models.json so the API
 can serve model metadata independently. Keep the two in sync when adding real models.
 """
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, File, HTTPException, UploadFile
 
 from app.schemas.models import ModelInfo, DemoPredictInput, DemoPredictResult
 from app.schemas.kawasaki import KawasakiInput, KawasakiResult
 from app.services.demo_model import run_demo_prediction
-from app.services import kawasaki_ivig
+from app.services import kawasaki_ivig, kawasaki_import
+
+_MAX_UPLOAD_BYTES = 2_000_000
 
 router = APIRouter(prefix="/api", tags=["models"])
 
@@ -58,3 +60,18 @@ def predict_kawasaki_ivig(payload: KawasakiInput) -> KawasakiResult:
         return kawasaki_ivig.run_prediction(payload)
     except kawasaki_ivig.ModelUnavailable:
         raise HTTPException(status_code=503, detail="Model temporarily unavailable.")
+
+
+@router.post("/predict/kawasaki-ivig/import")
+async def import_kawasaki_ivig(file: UploadFile = File(...)) -> dict:
+    """Parse an uploaded Excel/CSV into the 44 de-identified model variables for the
+    form to autofill (single patient). Identifier columns are ignored. Returns only
+    recognized {feature: value} pairs; no prediction is run here."""
+    content = await file.read()
+    if len(content) > _MAX_UPLOAD_BYTES:
+        raise HTTPException(status_code=413, detail="File too large.")
+    try:
+        values = kawasaki_import.parse_upload(file.filename or "", content)
+    except kawasaki_import.ImportParseError:
+        raise HTTPException(status_code=422, detail="Could not parse the uploaded file.")
+    return {"values": values, "n_parsed": len(values)}

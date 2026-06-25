@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import {
   KAWASAKI_FIELDS,
@@ -31,6 +31,12 @@ const T = {
   zh: {
     intro:
       '输入首次 IVIG 治疗前的去标识临床变量（共 44 项），估计 IVIG 无应答风险。所有字段均可留空，缺失值由锁定模型按训练集规则插补。',
+    importHint: '变量较多？可上传单个患儿的表格快速导入，自动填入下方表单，核对后再计算。',
+    importBtn: '上传 Excel / CSV 导入',
+    importTemplate: '下载导入模板',
+    importOk: (n: number) => `已导入 ${n} 项，请核对后再计算。`,
+    importErr: '导入失败：请使用下载的模板，并确认文件为 .xlsx 或 .csv。',
+    importNote: '请勿在表格中填写姓名、住院号等可识别信息；此类列会被忽略。',
     missing: '—（缺失）',
     no: '否 / 0',
     yes: '是 / 1',
@@ -65,6 +71,12 @@ const T = {
   en: {
     intro:
       'Enter de-identified pre-IVIG clinical variables (44 in total) to estimate IVIG non-response risk. Every field may be left blank; missing values are imputed by the locked pipeline.',
+    importHint: 'Many variables? Upload a single patient\'s table to autofill the form below, then review before computing.',
+    importBtn: 'Import Excel / CSV',
+    importTemplate: 'Download template',
+    importOk: (n: number) => `Imported ${n} value(s) — please review before computing.`,
+    importErr: 'Import failed: use the downloaded template and a .xlsx or .csv file.',
+    importNote: 'Do not include names, medical record numbers, or other identifiers; such columns are ignored.',
     missing: '— (missing)',
     no: 'No / 0',
     yes: 'Yes / 1',
@@ -137,8 +149,33 @@ export function KawasakiPredictForm({ lang }: { lang: Lang }) {
   const [result, setResult] = useState<PredictResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [importMsg, setImportMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const set = (key: string, v: string) => setValues((prev) => ({ ...prev, [key]: v }));
+
+  async function onImport(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImportMsg(null);
+    setResult(null);
+    setError(null);
+    try {
+      const body = new FormData();
+      body.append('file', file);
+      const res = await fetch(`${API_BASE}/api/predict/kawasaki-ivig/import`, { method: 'POST', body });
+      if (!res.ok) throw new Error(String(res.status));
+      const data = (await res.json()) as { values: Record<string, unknown>; n_parsed: number };
+      const next = { ...empty };
+      for (const [k, v] of Object.entries(data.values)) next[k] = String(v);
+      setValues(next);
+      setImportMsg({ ok: true, text: t.importOk(data.n_parsed) });
+    } catch {
+      setImportMsg({ ok: false, text: t.importErr });
+    } finally {
+      if (fileRef.current) fileRef.current.value = '';
+    }
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -171,6 +208,32 @@ export function KawasakiPredictForm({ lang }: { lang: Lang }) {
   return (
     <div className="border border-border bg-card p-6">
       <p className="max-w-3xl text-sm text-ink-secondary">{t.intro}</p>
+
+      {/* Excel/CSV import → autofill (single patient). */}
+      <div className="mt-5 border border-border bg-muted/40 p-4">
+        <p className="text-sm text-ink-secondary">{t.importHint}</p>
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <input
+            ref={fileRef}
+            type="file"
+            accept=".xlsx,.xlsm,.csv,.tsv"
+            onChange={onImport}
+            className="hidden"
+          />
+          <Button type="button" variant="secondary" onClick={() => fileRef.current?.click()}>
+            {t.importBtn}
+          </Button>
+          <a href="/kawasaki-import-template.csv" download className="link-quiet text-sm font-medium">
+            {t.importTemplate}
+          </a>
+          {importMsg && (
+            <span className={`text-sm ${importMsg.ok ? 'text-secondary' : 'text-ink-secondary'}`}>
+              {importMsg.text}
+            </span>
+          )}
+        </div>
+        <p className="mt-2 text-xs text-ink-muted">{t.importNote}</p>
+      </div>
 
       <form onSubmit={onSubmit} className="mt-6">
         {KAWASAKI_GROUP_ORDER.map((g) => (
