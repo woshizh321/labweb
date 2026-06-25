@@ -12,11 +12,11 @@
   {
     "id": "kawasaki-ivig",
     "name": "Kawasaki_IVIG",
-    "description": "Interpretable gradient-boosting model estimating IVIG non-response risk in Kawasaki disease from pre-treatment clinical and laboratory variables.",
+    "description": "Interpretable gradient-boosting model estimating IVIG non-response risk in Kawasaki disease from 44 pre-treatment clinical and laboratory variables.",
     "clinicalContext": "Exploratory risk stratification of IVIG non-response in Kawasaki disease, for research and educational use.",
     "status": "Prototype",
     "route": "/models/kawasaki-ivig",
-    "version": "v1.0.0",
+    "version": "v2.0.0",
     "disclaimer": "This tool is intended for research and educational use only. It is not a substitute for professional medical judgment, diagnosis, or treatment."
   }
 ]

@@ -7,7 +7,7 @@ pydantic==2.7.4
 # version that serialized locked_final_model_pipeline.joblib (read from the joblib's
 # embedded _sklearn_version); a mismatch triggers InconsistentVersionWarning or a
 # load failure. numpy>=2 is required because the artifact pickles numpy._core.*.
-scikit-learn==1.8.0
+scikit-learn==1.9.0
 numpy>=2.0,<3
 scipy>=1.13
 joblib>=1.4

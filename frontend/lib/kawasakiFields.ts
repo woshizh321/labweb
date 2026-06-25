@@ -1,12 +1,23 @@
 /**
- * Field metadata for the Kawasaki_IVIG single-patient form. Sourced verbatim from
- * the model's own feature dictionary (display_name_cn / display_name_en / unit /
- * reasonable range). The `key` matches the backend KawasakiInput schema (ascii),
- * which the backend maps to the pipeline's column names. Bilingual labels live here;
- * all fields are optional (the saved pipeline imputes missing values).
+ * Field metadata for the Kawasaki_IVIG (v2, 44-feature) single-patient form. Chinese
+ * labels are from the model's own variable dictionary; English labels and units are
+ * standard clinical equivalents. `key` matches the backend KawasakiInput schema AND
+ * the pipeline's column names. All fields are optional (the pipeline imputes missing).
  */
 export type FieldKind = 'sex' | 'binary' | 'number';
-export type GroupKey = 'demographics' | 'vitals' | 'symptoms' | 'labs';
+export type GroupKey =
+  | 'demographics'
+  | 'clinical_course'
+  | 'clinical_symptom'
+  | 'cbc'
+  | 'inflammation'
+  | 'liver'
+  | 'kidney'
+  | 'electrolyte'
+  | 'coagulation'
+  | 'lymphocyte_subset'
+  | 'myocardial_enzyme'
+  | 'cardiac_injury';
 
 export interface KawasakiField {
   key: string;
@@ -15,93 +26,116 @@ export interface KawasakiField {
   kind: FieldKind;
   group: GroupKey;
   unit?: string;
-  min?: number;
-  max?: number;
 }
 
-export const KAWASAKI_GROUP_ORDER: GroupKey[] = ['demographics', 'vitals', 'symptoms', 'labs'];
+export const KAWASAKI_GROUP_ORDER: GroupKey[] = ['demographics', 'clinical_course', 'clinical_symptom', 'cbc', 'inflammation', 'liver', 'kidney', 'electrolyte', 'coagulation', 'lymphocyte_subset', 'myocardial_enzyme', 'cardiac_injury'];
 
 export const KAWASAKI_GROUP_LABEL: Record<GroupKey, { cn: string; en: string }> = {
-  demographics: { cn: '人口学', en: 'Demographics' },
-  vitals: { cn: '生命体征', en: 'Vital signs' },
-  symptoms: { cn: '症状（病历提取）', en: 'Symptoms (note-derived)' },
-  labs: { cn: '实验室检查', en: 'Laboratory tests' },
+  demographics: { cn: '基本信息', en: 'Demographics' },
+  clinical_course: { cn: '病程与体温', en: 'Course & temperature' },
+  clinical_symptom: { cn: '临床症状', en: 'Symptoms' },
+  cbc: { cn: '血常规', en: 'Complete blood count' },
+  inflammation: { cn: '炎症指标', en: 'Inflammation markers' },
+  liver: { cn: '肝功能 / 胆红素', en: 'Liver & bilirubin' },
+  kidney: { cn: '肾功能', en: 'Kidney function' },
+  electrolyte: { cn: '电解质', en: 'Electrolytes' },
+  coagulation: { cn: '凝血', en: 'Coagulation' },
+  lymphocyte_subset: { cn: '淋巴细胞亚群', en: 'Lymphocyte subsets' },
+  myocardial_enzyme: { cn: '心肌酶', en: 'Myocardial enzymes' },
+  cardiac_injury: { cn: '心肌损伤', en: 'Cardiac injury' },
 };
 
 export const KAWASAKI_FIELDS: KawasakiField[] = [
-  // Demographics
+  { key: 'age_years', cn: '年龄', en: 'Age', kind: 'number', group: 'demographics', unit: 'years' },
   { key: 'sex', cn: '性别', en: 'Sex', kind: 'sex', group: 'demographics' },
-  { key: 'age_years', cn: '年龄', en: 'Age', kind: 'number', group: 'demographics', unit: 'years', min: 0, max: 18 },
-  { key: 'body_weight_kg', cn: '体重', en: 'Body weight', kind: 'number', group: 'demographics', unit: 'kg', min: 1, max: 120 },
-  { key: 'height_cm', cn: '身高', en: 'Height', kind: 'number', group: 'demographics', unit: 'cm', min: 30, max: 220 },
-  // Vital signs
-  { key: 'pre_ivig_max_temp', cn: 'IVIG前最高体温', en: 'Max temperature before IVIG', kind: 'number', group: 'vitals', unit: '°C', min: 35, max: 43 },
-  { key: 'pre_ivig_fever_ge_38', cn: 'IVIG前体温≥38°C', en: 'Fever ≥38°C before IVIG', kind: 'binary', group: 'vitals' },
-  // Symptoms (note-derived)
-  { key: 'fever_duration_days', cn: '发热时间', en: 'Fever duration', kind: 'number', group: 'symptoms', unit: 'days', min: 0, max: 30 },
-  { key: 'rash_duration_days', cn: '皮疹持续时间', en: 'Rash duration', kind: 'number', group: 'symptoms', unit: 'days', min: 0, max: 30 },
-  { key: 'conjunctival_injection', cn: '结膜充血', en: 'Conjunctival injection', kind: 'binary', group: 'symptoms' },
-  { key: 'cracked_lips', cn: '口唇皲裂', en: 'Cracked lips', kind: 'binary', group: 'symptoms' },
-  { key: 'strawberry_tongue', cn: '杨梅舌', en: 'Strawberry tongue', kind: 'binary', group: 'symptoms' },
-  { key: 'oral_mucosal_change', cn: '口腔黏膜改变', en: 'Oral mucosal change', kind: 'binary', group: 'symptoms' },
-  { key: 'cervical_lymphadenopathy', cn: '颈部淋巴结肿大', en: 'Cervical lymphadenopathy', kind: 'binary', group: 'symptoms' },
-  { key: 'extremity_edema', cn: '手足硬肿', en: 'Extremity edema', kind: 'binary', group: 'symptoms' },
-  { key: 'periungual_desquamation', cn: '肢端脱皮', en: 'Periungual desquamation', kind: 'binary', group: 'symptoms' },
-  { key: 'extremity_change', cn: '指趾端改变', en: 'Extremity change', kind: 'binary', group: 'symptoms' },
-  { key: 'rash', cn: '皮疹', en: 'Rash', kind: 'binary', group: 'symptoms' },
-  { key: 'classic_symptom_count', cn: '经典症状数量', en: 'Classic KD symptom count', kind: 'number', group: 'symptoms', unit: 'count', min: 0, max: 6 },
-  // Laboratory tests
-  { key: 'crp', cn: 'C反应蛋白', en: 'C-reactive protein', kind: 'number', group: 'labs', unit: 'mg/L', min: 0 },
-  { key: 'wbc', cn: '白细胞计数', en: 'White blood cell count', kind: 'number', group: 'labs', unit: '10⁹/L', min: 0 },
-  { key: 'neutrophil_pct', cn: '中性粒细胞百分比', en: 'Neutrophil percentage', kind: 'number', group: 'labs', unit: '%', min: 0, max: 100 },
-  { key: 'lymphocyte_pct', cn: '淋巴细胞百分比', en: 'Lymphocyte percentage', kind: 'number', group: 'labs', unit: '%', min: 0, max: 100 },
-  { key: 'hemoglobin', cn: '血红蛋白', en: 'Hemoglobin', kind: 'number', group: 'labs', unit: 'g/L', min: 0 },
-  { key: 'platelet', cn: '血小板计数', en: 'Platelet count', kind: 'number', group: 'labs', unit: '10⁹/L', min: 0 },
-  { key: 'albumin', cn: '白蛋白', en: 'Albumin', kind: 'number', group: 'labs', unit: 'g/L', min: 0 },
-  { key: 'alt', cn: '谷丙转氨酶', en: 'Alanine aminotransferase', kind: 'number', group: 'labs', unit: 'U/L', min: 0 },
-  { key: 'ast', cn: '谷草转氨酶', en: 'Aspartate aminotransferase', kind: 'number', group: 'labs', unit: 'U/L', min: 0 },
-  { key: 'total_bilirubin', cn: '总胆红素', en: 'Total bilirubin', kind: 'number', group: 'labs', unit: 'µmol/L', min: 0 },
-  { key: 'sodium', cn: '钠', en: 'Sodium', kind: 'number', group: 'labs', unit: 'mmol/L', min: 100, max: 180 },
-  { key: 'procalcitonin', cn: '降钙素原', en: 'Procalcitonin', kind: 'number', group: 'labs', unit: 'ng/mL', min: 0 },
-  { key: 'esr', cn: '血沉', en: 'Erythrocyte sedimentation rate', kind: 'number', group: 'labs', unit: 'mm/h', min: 0 },
-  { key: 'fibrinogen', cn: '纤维蛋白原', en: 'Fibrinogen', kind: 'number', group: 'labs', unit: 'g/L', min: 0 },
+  { key: 'max_temp_pre_ivig', cn: 'IVIG前最高体温', en: 'Max temperature before IVIG', kind: 'number', group: 'clinical_course', unit: '°C' },
+  { key: 'fever_days_ivig', cn: 'IVIG时发热天数', en: 'Fever duration at IVIG', kind: 'number', group: 'clinical_course', unit: 'days' },
+  { key: 'rash_days_ivig', cn: 'IVIG时皮疹天数', en: 'Rash duration at IVIG', kind: 'number', group: 'clinical_course', unit: 'days' },
+  { key: 'rash', cn: '皮疹', en: 'Rash', kind: 'binary', group: 'clinical_symptom' },
+  { key: 'conjunctival_injection', cn: '结膜充血', en: 'Conjunctival injection', kind: 'binary', group: 'clinical_symptom' },
+  { key: 'strawberry_tongue', cn: '草莓舌', en: 'Strawberry tongue', kind: 'binary', group: 'clinical_symptom' },
+  { key: 'cracked_lips', cn: '口唇皲裂', en: 'Cracked lips', kind: 'binary', group: 'clinical_symptom' },
+  { key: 'oral_mucosal_change', cn: '口腔黏膜改变', en: 'Oral mucosal change', kind: 'binary', group: 'clinical_symptom' },
+  { key: 'cervical_lymphadenopathy', cn: '颈部淋巴结肿大', en: 'Cervical lymphadenopathy', kind: 'binary', group: 'clinical_symptom' },
+  { key: 'extremity_edema', cn: '手足硬肿', en: 'Extremity edema', kind: 'binary', group: 'clinical_symptom' },
+  { key: 'periungual_desquamation', cn: '肢端脱皮', en: 'Periungual desquamation', kind: 'binary', group: 'clinical_symptom' },
+  { key: 'extremity_change', cn: '指趾端改变', en: 'Extremity change', kind: 'binary', group: 'clinical_symptom' },
+  { key: 'wbc', cn: 'IVIG前白细胞', en: 'White blood cell count', kind: 'number', group: 'cbc', unit: '10⁹/L' },
+  { key: 'neutrophil_percent', cn: 'IVIG前中性粒细胞百分比', en: 'Neutrophil percentage', kind: 'number', group: 'cbc', unit: '%' },
+  { key: 'lymphocyte_percent', cn: 'IVIG前淋巴细胞百分比', en: 'Lymphocyte percentage', kind: 'number', group: 'cbc', unit: '%' },
+  { key: 'monocyte_percent', cn: '单核细胞百分数', en: 'Monocyte percentage', kind: 'number', group: 'cbc', unit: '%' },
+  { key: 'hemoglobin', cn: 'IVIG前血红蛋白', en: 'Hemoglobin', kind: 'number', group: 'cbc', unit: 'g/L' },
+  { key: 'platelet', cn: 'IVIG前血小板', en: 'Platelet count', kind: 'number', group: 'cbc', unit: '10⁹/L' },
+  { key: 'crp', cn: 'IVIG前C反应蛋白', en: 'C-reactive protein', kind: 'number', group: 'inflammation', unit: 'mg/L' },
+  { key: 'esr', cn: '血沉', en: 'Erythrocyte sedimentation rate', kind: 'number', group: 'inflammation', unit: 'mm/h' },
+  { key: 'pct', cn: '降钙素原', en: 'Procalcitonin', kind: 'number', group: 'inflammation', unit: 'ng/mL' },
+  { key: 'ferritin', cn: '铁蛋白', en: 'Ferritin', kind: 'number', group: 'inflammation', unit: 'ng/mL' },
+  { key: 'alt', cn: '谷丙转氨酶', en: 'Alanine aminotransferase (ALT)', kind: 'number', group: 'liver', unit: 'U/L' },
+  { key: 'ast', cn: '谷草转氨酶', en: 'Aspartate aminotransferase (AST)', kind: 'number', group: 'liver', unit: 'U/L' },
+  { key: 'albumin', cn: '白蛋白', en: 'Albumin', kind: 'number', group: 'liver', unit: 'g/L' },
+  { key: 'total_bilirubin', cn: '总胆红素', en: 'Total bilirubin', kind: 'number', group: 'liver', unit: 'µmol/L' },
+  { key: 'direct_bilirubin', cn: '直接胆红素', en: 'Direct bilirubin', kind: 'number', group: 'liver', unit: 'µmol/L' },
+  { key: 'creatinine', cn: '肌酐', en: 'Creatinine', kind: 'number', group: 'kidney', unit: 'µmol/L' },
+  { key: 'urea_nitrogen', cn: '尿素氮', en: 'Urea nitrogen (BUN)', kind: 'number', group: 'kidney', unit: 'mmol/L' },
+  { key: 'uric_acid', cn: '尿酸', en: 'Uric acid', kind: 'number', group: 'kidney', unit: 'µmol/L' },
+  { key: 'sodium', cn: '钠', en: 'Sodium', kind: 'number', group: 'electrolyte', unit: 'mmol/L' },
+  { key: 'potassium', cn: '钾', en: 'Potassium', kind: 'number', group: 'electrolyte', unit: 'mmol/L' },
+  { key: 'pt', cn: '凝血酶原时间 (PT)', en: 'Prothrombin time (PT)', kind: 'number', group: 'coagulation', unit: 's' },
+  { key: 'aptt', cn: '活化部分凝血活酶时间 (APTT)', en: 'Activated partial thromboplastin time (APTT)', kind: 'number', group: 'coagulation', unit: 's' },
+  { key: 'fibrinogen', cn: '纤维蛋白原', en: 'Fibrinogen', kind: 'number', group: 'coagulation', unit: 'g/L' },
+  { key: 'cd4_t_count', cn: 'CD4+T细胞绝对值', en: 'CD4+ T-cell count', kind: 'number', group: 'lymphocyte_subset', unit: 'cells/µL' },
+  { key: 'cd8_t_count', cn: 'CD8+T细胞绝对值', en: 'CD8+ T-cell count', kind: 'number', group: 'lymphocyte_subset', unit: 'cells/µL' },
+  { key: 'cd4_cd8_ratio', cn: 'CD4/CD8 比值', en: 'CD4/CD8 ratio', kind: 'number', group: 'lymphocyte_subset' },
+  { key: 'cd19_b_count', cn: 'CD19+B细胞绝对值', en: 'CD19+ B-cell count', kind: 'number', group: 'lymphocyte_subset', unit: 'cells/µL' },
+  { key: 'ldh', cn: '乳酸脱氢酶', en: 'Lactate dehydrogenase (LDH)', kind: 'number', group: 'myocardial_enzyme', unit: 'U/L' },
+  { key: 'ck_mb', cn: '肌酸激酶同工酶 (CK-MB)', en: 'Creatine kinase-MB (CK-MB)', kind: 'number', group: 'myocardial_enzyme', unit: 'U/L' },
+  { key: 'ntprobnp', cn: 'NT-proBNP', en: 'NT-proBNP', kind: 'number', group: 'cardiac_injury', unit: 'pg/mL' },
 ];
 
-/**
- * A fully SYNTHETIC demo case (not a real patient row). Plausible values illustrating
- * a higher-risk pattern; used only to populate the form for demonstration.
- */
+/** Fully SYNTHETIC demo case (not a real patient row). Plausible higher-risk pattern. */
 export const KAWASAKI_SYNTHETIC_EXAMPLE: Record<string, string> = {
+  age_years: '1.5',
   sex: 'male',
-  age_years: '0.8',
-  body_weight_kg: '9',
-  height_cm: '72',
-  pre_ivig_max_temp: '39.8',
-  pre_ivig_fever_ge_38: '1',
-  fever_duration_days: '4',
-  rash_duration_days: '3',
+  max_temp_pre_ivig: '39.5',
+  fever_days_ivig: '5',
+  rash_days_ivig: '4',
+  rash: '1',
   conjunctival_injection: '1',
+  strawberry_tongue: '1',
   cracked_lips: '1',
-  strawberry_tongue: '0',
   oral_mucosal_change: '1',
   cervical_lymphadenopathy: '1',
   extremity_edema: '1',
   periungual_desquamation: '0',
   extremity_change: '0',
-  rash: '1',
-  classic_symptom_count: '4',
-  crp: '95',
-  wbc: '17.5',
-  neutrophil_pct: '82',
-  lymphocyte_pct: '12',
-  hemoglobin: '98',
-  platelet: '300',
-  albumin: '31',
-  alt: '60',
-  ast: '55',
+  wbc: '16',
+  neutrophil_percent: '80',
+  lymphocyte_percent: '14',
+  monocyte_percent: '6',
+  hemoglobin: '100',
+  platelet: '320',
+  crp: '90',
+  esr: '60',
+  pct: '1.5',
+  ferritin: '350',
+  alt: '55',
+  ast: '50',
+  albumin: '32',
   total_bilirubin: '12',
-  sodium: '133',
-  procalcitonin: '1.8',
-  esr: '65',
-  fibrinogen: '5.5',
+  direct_bilirubin: '5',
+  creatinine: '25',
+  urea_nitrogen: '4',
+  uric_acid: '200',
+  sodium: '134',
+  potassium: '4.2',
+  pt: '13',
+  aptt: '38',
+  fibrinogen: '5',
+  cd4_t_count: '900',
+  cd8_t_count: '450',
+  cd4_cd8_ratio: '2.0',
+  cd19_b_count: '800',
+  ldh: '320',
+  ck_mb: '25',
+  ntprobnp: '600',
 };

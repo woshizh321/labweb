@@ -1,77 +1,58 @@
-"""Kawasaki_IVIG non-response inference service (path B).
+"""Kawasaki_IVIG non-response inference service (path B, v2 = 44 features).
 
 Loads the locked scikit-learn pipeline (preprocessing + GradientBoosting) once and
-serves single-patient predictions. This faithfully reproduces the original Streamlit
-tool's assembly: build a 1-row frame with the 32 model columns in order, missing ->
-NaN (the pipeline imputes), predict_proba[:, positive], then apply the locked
-thresholds (Youden / sensitivity-oriented) read from clinical_tool_summary.json.
+serves single-patient predictions. Faithfully reproduces the upgraded Streamlit tool:
+build a 1-row frame with the 44 model columns in order, missing -> NaN (the pipeline
+imputes), map sex male/female -> 男/女, binaries -> 0/1, predict_proba[:, positive],
+then compare against the locked Youden threshold (training nested OOF).
 
-The artifact is research-use only and not externally validated; every response
-carries the disclaimer.
+The artifact is research-use only and not externally validated; every response carries
+the disclaimer.
 """
 from __future__ import annotations
 
-import json
+import csv
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from app.schemas.kawasaki import KawasakiInput, KawasakiResult
 
 MODEL_ID = "kawasaki-ivig"
-MODEL_VERSION = "v1.0.0"
+MODEL_VERSION = "v2.0.0"
 
 _ARTIFACT_DIR = Path(__file__).resolve().parents[2] / "model_artifacts" / "kawasaki_ivig"
 _PIPELINE_PATH = _ARTIFACT_DIR / "locked_final_model_pipeline.joblib"
-_SUMMARY_PATH = _ARTIFACT_DIR / "clinical_tool_summary.json"
+_THRESHOLD_PATH = _ARTIFACT_DIR / "selected_model_thresholds.csv"
 
 DISCLAIMER = (
     "Research-use prototype. This model predicts IVIG non-response risk in Kawasaki "
-    "disease and has not been externally or temporally validated. It is a risk-"
-    "stratification aid (high negative predictive value), not a diagnostic test, and "
-    "must not replace clinician judgment or be used as a standalone decision system."
+    "disease from retrospective, single-centre data and has NOT been externally or "
+    "prospectively validated. It is a research risk-stratification aid, not a diagnostic "
+    "test, and must not replace clinician judgment or be used as a standalone decision "
+    "system."
 )
 
-# Order matters: the pipeline's ColumnTransformer expects these exact column names.
+# Canonical column order expected by the pipeline (clinical_tool_summary.json "features").
 FEATURES: list[str] = [
-    "性别", "年龄（岁）", "体重(kg)", "身高(cm)",
-    "text_fever_duration_days", "text_rash_duration_days",
-    "pre_ivig_max_temp", "pre_ivig_fever_ge_38",
-    "text_conjunctival_injection", "text_cracked_lips", "text_strawberry_tongue",
-    "text_oral_mucosal_change", "text_cervical_lymphadenopathy", "text_extremity_edema",
-    "text_periungual_desquamation", "text_extremity_change", "text_rash",
-    "text_classic_symptom_count",
-    "crp", "wbc", "neutrophil_pct", "lymphocyte_pct", "hemoglobin", "platelet",
-    "albumin", "alt", "ast", "total_bilirubin", "sodium", "pct", "esr", "fibrinogen",
+    "age_years", "max_temp_pre_ivig", "sex",
+    "rash", "conjunctival_injection", "strawberry_tongue", "cracked_lips",
+    "oral_mucosal_change", "cervical_lymphadenopathy", "extremity_edema",
+    "periungual_desquamation", "extremity_change",
+    "lymphocyte_percent", "platelet", "wbc", "neutrophil_percent", "hemoglobin",
+    "crp", "ast", "albumin", "direct_bilirubin", "total_bilirubin", "alt",
+    "creatinine", "uric_acid", "urea_nitrogen", "sodium", "potassium",
+    "monocyte_percent", "fever_days_ivig", "aptt", "pt", "fibrinogen", "esr",
+    "cd4_t_count", "cd8_t_count", "cd4_cd8_ratio", "cd19_b_count", "pct",
+    "ferritin", "ldh", "ck_mb", "rash_days_ivig", "ntprobnp",
 ]
 
-# ascii schema field -> model column name
-_KEY_TO_COLUMN: dict[str, str] = {
-    "sex": "性别",
-    "age_years": "年龄（岁）",
-    "body_weight_kg": "体重(kg)",
-    "height_cm": "身高(cm)",
-    "fever_duration_days": "text_fever_duration_days",
-    "rash_duration_days": "text_rash_duration_days",
-    "pre_ivig_max_temp": "pre_ivig_max_temp",
-    "pre_ivig_fever_ge_38": "pre_ivig_fever_ge_38",
-    "conjunctival_injection": "text_conjunctival_injection",
-    "cracked_lips": "text_cracked_lips",
-    "strawberry_tongue": "text_strawberry_tongue",
-    "oral_mucosal_change": "text_oral_mucosal_change",
-    "cervical_lymphadenopathy": "text_cervical_lymphadenopathy",
-    "extremity_edema": "text_extremity_edema",
-    "periungual_desquamation": "text_periungual_desquamation",
-    "extremity_change": "text_extremity_change",
-    "rash": "text_rash",
-    "classic_symptom_count": "text_classic_symptom_count",
-    "crp": "crp", "wbc": "wbc", "neutrophil_pct": "neutrophil_pct",
-    "lymphocyte_pct": "lymphocyte_pct", "hemoglobin": "hemoglobin", "platelet": "platelet",
-    "albumin": "albumin", "alt": "alt", "ast": "ast", "total_bilirubin": "total_bilirubin",
-    "sodium": "sodium", "procalcitonin": "pct", "esr": "esr", "fibrinogen": "fibrinogen",
+_BINARY = {
+    "rash", "conjunctival_injection", "strawberry_tongue", "cracked_lips",
+    "oral_mucosal_change", "cervical_lymphadenopathy", "extremity_edema",
+    "periungual_desquamation", "extremity_change",
 }
-
-_SEX_MAP = {"male": "男性", "female": "女性"}
+_SEX_MAP = {"male": "男", "female": "女"}
 
 
 class ModelUnavailable(RuntimeError):
@@ -79,9 +60,12 @@ class ModelUnavailable(RuntimeError):
 
 
 @lru_cache(maxsize=1)
-def _thresholds() -> dict[str, float]:
-    data = json.loads(_SUMMARY_PATH.read_text(encoding="utf-8"))["thresholds"]
-    return {"youden": float(data["youden"]), "sens80": float(data["sens80"])}
+def _youden_threshold() -> float:
+    with _THRESHOLD_PATH.open(encoding="utf-8") as fh:
+        for row in csv.DictReader(fh):
+            if row.get("threshold_strategy") == "youden":
+                return float(row["threshold"])
+    raise ModelUnavailable("Youden threshold not found")
 
 
 @lru_cache(maxsize=1)
@@ -107,16 +91,14 @@ def _positive_index() -> int:
     for target in (1, 1.0, "1", True):
         if target in classes:
             return classes.index(target)
-    return int(np.argmax(classes))  # fallback: highest-coded class
+    return int(np.argmax(classes))
 
 
-def _risk_band(p: float, th: dict[str, float]) -> str:
-    if p >= 0.15:
-        return "very_high"
-    if p >= th["youden"]:
-        return "above_youden"
-    if p >= th["sens80"]:
-        return "above_sens80"
+def _risk_band(p: float, th: float) -> str:
+    if p >= 0.5:
+        return "high"
+    if p >= th:
+        return "elevated"
     return "low"
 
 
@@ -125,6 +107,7 @@ def warmup() -> bool:
     try:
         _pipeline()
         _positive_index()
+        _youden_threshold()
         return True
     except Exception:
         return False
@@ -135,38 +118,35 @@ def run_prediction(payload: KawasakiInput) -> KawasakiResult:
     import pandas as pd
 
     pipe = _pipeline()  # raises ModelUnavailable -> handled by the router as 503
-    th = _thresholds()
+    th = _youden_threshold()
 
-    supplied = payload.model_dump(exclude={"threshold_strategy"})
+    supplied = payload.model_dump()
     n_provided = sum(1 for v in supplied.values() if v is not None)
 
     row: dict[str, Any] = {col: np.nan for col in FEATURES}
     for key, value in supplied.items():
         if value is None:
             continue
-        col = _KEY_TO_COLUMN[key]
         if key == "sex":
-            row[col] = _SEX_MAP.get(value, value)
+            row[key] = _SEX_MAP.get(value, value)
+        elif key in _BINARY:
+            row[key] = float(value)
         else:
-            row[col] = float(value)
+            row[key] = float(value)
 
     frame = pd.DataFrame([row], columns=FEATURES)
-    # Numeric columns to float (the single categorical '性别' stays object).
     for col in FEATURES:
-        if col != "性别":
+        if col != "sex":
             frame[col] = pd.to_numeric(frame[col], errors="coerce").astype(float)
 
     probability = float(pipe.predict_proba(frame)[:, _positive_index()][0])
-    strategy = payload.threshold_strategy
-    threshold_used = th["sens80"] if strategy == "sens80" else th["youden"]
 
     return KawasakiResult(
         model_id=MODEL_ID,
         model_version=MODEL_VERSION,
         probability=round(probability, 4),
-        threshold_strategy=strategy,
-        threshold_used=round(threshold_used, 4),
-        risk_label="higher_risk" if probability >= threshold_used else "lower_risk",
+        threshold_used=round(th, 4),
+        risk_label="higher_risk" if probability >= th else "lower_risk",
         risk_band=_risk_band(probability, th),
         n_provided=n_provided,
         completeness=round(n_provided / len(FEATURES), 3),

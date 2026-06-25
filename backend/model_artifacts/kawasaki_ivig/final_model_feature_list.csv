@@ -1,33 +1,45 @@
-﻿variable_name,display_name_cn,display_name_en,variable_type,unit,source,feature_group,required_or_optional,missing_value_handling,example_value,recommended_input_widget,min_reasonable_value,max_reasonable_value,notes
-性别,性别,Sex,categorical,,demographics,Demographics,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,男性,selectbox,,,input should be available before initial IVIG treatment
-年龄（岁）,年龄,Age,numeric,years,demographics,Demographics,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,2.0,text_input,0.0,18.0,input should be available before initial IVIG treatment
-体重(kg),体重,Body weight,numeric,kg,demographics,Demographics,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,12.0,text_input,1.0,120.0,input should be available before initial IVIG treatment
-身高(cm),身高,Height,numeric,cm,demographics,Demographics,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,88.0,text_input,30.0,220.0,input should be available before initial IVIG treatment
-text_fever_duration_days,发热时间,Fever duration,numeric,days,symptom duration at IVIG,Admission-note-derived symptoms,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,5.982291666666667,text_input,0.0,30.0,input should be available before initial IVIG treatment
-text_rash_duration_days,皮疹持续时间,Rash duration,numeric,days,symptom duration at IVIG,Admission-note-derived symptoms,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,5.026608796296296,text_input,0.0,30.0,input should be available before initial IVIG treatment
-pre_ivig_max_temp,IVIG前最高体温,Maximum temperature before initial IVIG,numeric,deg C,vital signs / admission note,Vital signs,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,39.7,text_input,35.0,43.0,must be available before initial IVIG; merged maximum temperature variable
-pre_ivig_fever_ge_38,IVIG前体温>=38C,Fever >=38C before initial IVIG,binary,,vital signs,Vital signs,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,1.0,selectbox,0.0,1.0,input should be available before initial IVIG treatment
-text_conjunctival_injection,结膜充血,Conjunctival injection,binary,,admission-note derived variable,Admission-note-derived symptoms,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,1.0,selectbox,0.0,1.0,derived from admission notes; requires manual audit before clinical deployment
-text_cracked_lips,口唇皲裂,Cracked lips,binary,,admission-note derived variable,Admission-note-derived symptoms,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,0.0,selectbox,0.0,1.0,derived from admission notes; requires manual audit before clinical deployment
-text_strawberry_tongue,杨梅舌,Strawberry tongue,binary,,admission-note derived variable,Admission-note-derived symptoms,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,1.0,selectbox,0.0,1.0,derived from admission notes; requires manual audit before clinical deployment
-text_oral_mucosal_change,口腔黏膜改变,Oral mucosal change,binary,,admission-note derived variable,Admission-note-derived symptoms,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,1.0,selectbox,0.0,1.0,derived from admission notes; requires manual audit before clinical deployment
-text_cervical_lymphadenopathy,颈部淋巴结肿大,Cervical lymphadenopathy,binary,,admission-note derived variable,Admission-note-derived symptoms,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,1.0,selectbox,0.0,1.0,derived from admission notes; requires manual audit before clinical deployment
-text_extremity_edema,手足硬肿,Extremity edema,binary,,admission-note derived variable,Admission-note-derived symptoms,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,0.0,selectbox,0.0,1.0,derived from admission notes; requires manual audit before clinical deployment
-text_periungual_desquamation,肢端脱皮,Periungual desquamation,binary,,admission-note derived variable,Admission-note-derived symptoms,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,0.0,selectbox,0.0,1.0,derived from admission notes; requires manual audit before clinical deployment
-text_extremity_change,指趾端改变,Extremity change,binary,,admission-note derived variable,Admission-note-derived symptoms,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,0.0,selectbox,0.0,1.0,derived from admission notes; requires manual audit before clinical deployment
-text_rash,皮疹,Rash,binary,,admission-note derived variable,Admission-note-derived symptoms,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,1.0,selectbox,0.0,1.0,derived from admission notes; requires manual audit before clinical deployment
-text_classic_symptom_count,经典症状数量,Classic KD symptom count,numeric,count,admission-note derived variable,Admission-note-derived symptoms,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,3.0,text_input,0.0,6.0,derived from admission notes; requires manual audit before clinical deployment
-crp,C反应蛋白,C-reactive protein,numeric,mg/L,laboratory tests,Laboratory tests,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,48.4,text_input,0.0,,input should be available before initial IVIG treatment
-wbc,白细胞计数,White blood cell count,numeric,10^9/L,laboratory tests,Laboratory tests,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,13.1,text_input,0.0,,input should be available before initial IVIG treatment
-neutrophil_pct,中性粒细胞百分比,Neutrophil percentage,numeric,%,laboratory tests,Laboratory tests,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,65.5,text_input,0.0,100.0,input should be available before initial IVIG treatment
-lymphocyte_pct,淋巴细胞百分比,Lymphocyte percentage,numeric,%,laboratory tests,Laboratory tests,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,24.5,text_input,0.0,100.0,input should be available before initial IVIG treatment
-hemoglobin,血红蛋白,Hemoglobin,numeric,g/L,laboratory tests,Laboratory tests,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,111.0,text_input,0.0,,input should be available before initial IVIG treatment
-platelet,血小板计数,Platelet count,numeric,10^9/L,laboratory tests,Laboratory tests,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,323.5,text_input,0.0,,input should be available before initial IVIG treatment
-albumin,白蛋白,Albumin,numeric,g/L,laboratory tests,Laboratory tests,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,39.6,text_input,0.0,,input should be available before initial IVIG treatment
-alt,谷丙转氨酶,Alanine aminotransferase,numeric,U/L,laboratory tests,Laboratory tests,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,20.0,text_input,0.0,,input should be available before initial IVIG treatment
-ast,谷草转氨酶,Aspartate aminotransferase,numeric,U/L,laboratory tests,Laboratory tests,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,32.0,text_input,0.0,,input should be available before initial IVIG treatment
-total_bilirubin,总胆红素,Total bilirubin,numeric,umol/L,laboratory tests,Laboratory tests,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,7.2,text_input,0.0,,input should be available before initial IVIG treatment
-sodium,钠,Sodium,numeric,mmol/L,laboratory tests,Laboratory tests,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,137.7,text_input,100.0,180.0,input should be available before initial IVIG treatment
-pct,降钙素原,Procalcitonin,numeric,ng/mL,laboratory tests,Laboratory tests,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,0.454,text_input,0.0,,input should be available before initial IVIG treatment
-esr,血沉,Erythrocyte sedimentation rate,numeric,mm/h,laboratory tests,Laboratory tests,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,39.0,text_input,0.0,,input should be available before initial IVIG treatment
-fibrinogen,纤维蛋白原,Fibrinogen,numeric,g/L,laboratory tests,Laboratory tests,optional input; model variable,allowed; imputed inside saved preprocessing pipeline using training-set rules,4.94,text_input,0.0,,input should be available before initial IVIG treatment
+﻿variable
+age_years
+max_temp_pre_ivig
+sex
+rash
+conjunctival_injection
+strawberry_tongue
+cracked_lips
+oral_mucosal_change
+cervical_lymphadenopathy
+extremity_edema
+periungual_desquamation
+extremity_change
+lymphocyte_percent
+platelet
+wbc
+neutrophil_percent
+hemoglobin
+crp
+ast
+albumin
+direct_bilirubin
+total_bilirubin
+alt
+creatinine
+uric_acid
+urea_nitrogen
+sodium
+potassium
+monocyte_percent
+fever_days_ivig
+aptt
+pt
+fibrinogen
+esr
+cd4_t_count
+cd8_t_count
+cd4_cd8_ratio
+cd19_b_count
+pct
+ferritin
+ldh
+ck_mb
+rash_days_ivig
+ntprobnp

@@ -20,6 +20,10 @@ backend/model_artifacts/*
 !backend/model_artifacts/kawasaki_ivig/
 !backend/model_artifacts/kawasaki_ivig/**
 
+# Model source drops (contain raw dictionaries / sample_cases.json with patient ids).
+# Only the vendored artifacts under backend/model_artifacts/ are committed.
+/07_clinical_tool/
+
 # OS / editor
 .DS_Store
 *.log
